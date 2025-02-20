@@ -1,0 +1,156 @@
+
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>Chess Board Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .board {
+            width: 400px;
+            height: 400px;
+            border: 2px solid #333;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+        }
+        
+        .square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .white {
+            background-color: #f0d9b5;
+        }
+        
+        .black {
+            background-color: #b58863;
+        }
+        
+        .white-piece {
+            color: white;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        
+        .black-piece {
+            color: black;
+        }
+        
+        .controls {
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #status {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="board" class="board"></div>
+    <div class="controls">
+        <button onclick="makeMove()">Make Bot Move</button>
+        <button onclick="resetBoard()">Reset Board</button>
+    </div>
+    <div id="status"></div>
+
+    <script>
+        const pieceLetters = {
+            'k': 'K', 'q': 'Q', 'r': 'R', 'b': 'B', 'n': 'N', 'p': 'P',
+            'K': 'K', 'Q': 'Q', 'R': 'R', 'B': 'B', 'N': 'N', 'P': 'P'
+        };
+
+        let game = new Chess();
+        let board = document.getElementById('board');
+        let statusDiv = document.getElementById('status');
+
+        function drawBoard() {
+            board.innerHTML = '';
+            let position = game.board();
+            
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    let square = document.createElement('div');
+                    square.className = `square ${(i + j) % 2 === 0 ? 'white' : 'black'}`;
+                    
+                    let piece = position[i][j];
+                    if (piece) {
+                        let pieceChar = piece.type.toUpperCase();
+                        let span = document.createElement('span');
+                        span.className = piece.color === 'w' ? 'white-piece' : 'black-piece';
+                        span.textContent = pieceChar;
+                        square.appendChild(span);
+                    }
+                    
+                    board.appendChild(square);
+                }
+            }
+            
+            updateStatus();
+        }
+
+        function updateStatus() {
+            let status = '';
+            if (game.in_checkmate()) {
+                status = 'Game Over - Checkmate!';
+            } else if (game.in_draw()) {
+                status = 'Game Over - Draw!';
+            } else {
+                status = game.turn() === 'w' ? 'White to move' : 'Black to move';
+                if (game.in_check()) {
+                    status += ' (In Check)';
+                }
+            }
+            statusDiv.textContent = status;
+        }
+
+        function makeMove() {
+            if (game.game_over()) return;
+
+            let moves = game.moves();
+            if (moves.length > 0) {
+                let randomMove = moves[Math.floor(Math.random() * moves.length)];
+                game.move(randomMove);
+                drawBoard();
+            }
+        }
+
+        function resetBoard() {
+            game.reset();
+            drawBoard();
+        }
+
+        // Initial draw
+        drawBoard();
+    </script>
+</body>
+</html>
