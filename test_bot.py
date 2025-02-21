@@ -29,7 +29,7 @@ def play_game():
 
 
 def main():
-    num_matches = 20
+    num_matches = 300
     bot_wins = 0
     bot_losses = 0
     draws = 0
