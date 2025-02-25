@@ -106,7 +106,10 @@ MIT License
 
 ## Contributing
 
-Feel free to submit issues and enhancement requests!
+This project was developed by the team "We Can't Code" during the Bots Gambit by IEEE RAS. The team members are:
+
+- [bhaskarjya](https://www.linkedin.com/in/bhaskarjya-nayananju-a63445316)
+- [slyeet03](https://github.com/slyeet03)
 
 ## Acknowledgments
 
